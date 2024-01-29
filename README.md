@@ -6,7 +6,7 @@ Flip is a minimal on-chain service enabling quick, cheap cross-chain swaps lever
 
 ### Prerequisites
 
-- Node.js (v14.x or later recommended)
+- Node.js (v16.x recommended)
 - PostgreSQL installed and accessible.
 - Docker installed if you plan to use containerization.
 
