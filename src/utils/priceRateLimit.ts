@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers";
 import { getHighPrice, getLowPrice } from "./price";
 
-export const CAP = 0.1; // $10 
+export const CAP = 10; // $10 
 
 // return [cappedAmount, remainder, conversionRate (lowPrice)]
 export function limitToken(tokenAmountBN: BigNumber, decimal: number): [BigNumber, BigNumber, string] {
