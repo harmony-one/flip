@@ -1,0 +1,18 @@
+# dependency directories
+node_modules/
+
+# typescript compiled output
+dist/
+build/
+
+# environment variables
+.env
+.env.dev
+
+# logs
+*.log
+npm-debug.log*
+
+# operating System Files
+.DS_Store
+.vscode
