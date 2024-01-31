@@ -4,7 +4,7 @@ import GeneralIndexer from './indexers/GeneralIndexer';
 import HarmonyIndexer from './indexers/HarmonyIndexer';
 import HarmonyManager from './services/HarmonyManager';
 import GeneralManager from './services/GeneralManager';
-import { getAllRemainders, getChainTransactions } from './db/db';
+import { getAllFailed, getAllRemainders, getChainTransactions } from './db/db';
 
 const PORT = process.env.PORT! || 3000;
 
@@ -20,6 +20,7 @@ function setupRoutes() {
   app.get('/health', (_, res) => res.send('ok'));
   app.get('/txs', async (_, res) => res.json(await getChainTransactions(chainConfig.chain)));
   app.get('/remainders', async (_, res) => res.json(await getAllRemainders()));
+  app.get('/failed', async (_, res) => res.json(await getAllFailed()));
 }
 
 async function startServer() {

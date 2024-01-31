@@ -2,7 +2,6 @@ const HARMONY = 'Harmony';
 const BASE = 'Base';
 const BSC = 'BSC';
 
-// TODO: ensure the required values are loaded
 interface ChainConfig {
   chain: string;
   rpcUrl: string;

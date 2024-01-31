@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { ChainConfig } from "../config/type";
 import { convertOneToToken, getNumberAmount } from "../utils/price";
 import { tokenConfigs } from "../config";
-import { saveRemainder, saveTransction } from '../db/db';
+import { saveFailed, saveRemainder, saveTransction } from '../db/db';
 import { limitToken } from '../utils/priceRateLimit';
 import { generalManager, harmonyIndexer } from '../server';
 
@@ -51,11 +51,11 @@ class HarmonyManager {
         }
       };
 
-      // TODO: await or nah
-      generalManager.handleRequest(data);
+      await generalManager.handleRequest(data);
 
     } catch (error) {
-      // TODO: revert transaction
+      // save failed transaction to manually process refund
+      await saveFailed(dstAddress, this.config.chain, srcHash, 'ONE', getNumberAmount(amount.toString(), 18));
       if (error instanceof Error) {
         console.error('Error sending request', error.message);
       } else {
@@ -88,13 +88,14 @@ class HarmonyManager {
 
       const { totalAmount, remainder, conversionRate } = remainderInfo;
       if (BigNumber.from(remainder).gt(BigNumber.from(0))) {
-        await saveRemainder(
+        saveRemainder(
           dstAddress, this.config.chain, txResponse.hash, 'ONE',
           ethers.utils.formatUnits(totalAmount, 18), ethers.utils.formatUnits(amount, 18), ethers.utils.formatUnits(remainder, 18), conversionRate
         );
       }
     } catch (error) {
       console.error('Error handling request:', error);
+      throw error;
     }
   }
 }

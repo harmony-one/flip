@@ -15,11 +15,9 @@ const argv = yargs(hideBin(process.argv))
   .parseSync();
 
 
-// TODO: ensure all required env variables are set
 let chainConfig: CrossChainConfig;
 const chain = argv.chain ? argv.chain.toLowerCase() : '';
 
-// TODO: tokenConfigs only for harmony
 function loadTokenConfigs(): Map<String, TokenConfig> {
   const tokenConfigs = new Map();
   const chainConfigs = [bscConfig, baseConfig]; // NOTE: add chain config here

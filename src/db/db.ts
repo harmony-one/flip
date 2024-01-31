@@ -26,7 +26,7 @@ const runSchemaFile = async (filePath: string) => {
 };
 
 const initDb = async () => {
-  const tables = ['remainders', 'transactions'];
+  const tables = ['remainders', 'transactions', 'failed'];
   for (const table of tables) {
     const exists = await checkTableExists(table);
     if (!exists) {
@@ -53,6 +53,11 @@ const getAllRemainders = async () => {
   const result = await query('SELECT * FROM remainders ORDER BY id DESC');
   return result.rows;
 };
+
+const getAllFailed = async () => {
+  const result = await query('SELECT * FROM failed ORDER BY id DESC');
+  return result.rows;
+}
 
 const saveTransction = async (
   address: string, srcChain: string, srcHash: string, dstChain: string, dstHash: string, asset: string, amount: number) => {
@@ -82,4 +87,18 @@ const saveRemainder = async (
   }
 }
 
-export { initDb, getAllTransactions, getChainTransactions, getAllRemainders, saveTransction, saveRemainder };
+const saveFailed = async (
+  address: string, chain: string, hash: string, asset: string, amount: number) => {
+  try {
+    const insertQuery = `
+      INSERT INTO failed (address, chain, tx_hash, asset, amount)
+      VALUES ($1, $2, $3, $4, $5)
+      `;
+    await query(insertQuery, [address, chain, hash, asset, amount]);
+    console.log(`Failed tx saved: ${hash}`);
+  } catch (error) {
+    console.error('Failed to save failed transaction', error as Error);
+  }
+}
+
+export { initDb, getAllTransactions, getChainTransactions, getAllRemainders, getAllFailed, saveTransction, saveRemainder, saveFailed };
